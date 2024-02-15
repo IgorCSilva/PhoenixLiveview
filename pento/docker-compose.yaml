@@ -1,0 +1,37 @@
+version: '3.5'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: pento
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    ports:
+      - "4000:4000"
+    depends_on:
+      - db
+    networks:
+      - pento_network
+
+  db:
+    image: postgres
+    container_name: pento_database
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE}
+    restart: always
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - pento_network
+
+volumes:
+  pgdata:
+
+networks:
+  pento_network:
+  
